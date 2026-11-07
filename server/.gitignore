@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment Variables & Sensitive Credentials (NEVER COMMIT)
+.env
+.env.*
+!.env.example
+
+# Vector Database Data & Temporary Storage
+storage/chroma_db/
+storage/pdf/*.pdf
+!storage/pdf/.gitkeep
+
+# IDEs & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Logs & Testing
+*.log
+.pytest_cache/
+
