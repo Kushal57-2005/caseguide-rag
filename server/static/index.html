@@ -334,6 +334,18 @@
             <span id="upload-status-text">Processing and embedding PDF...</span>
           </div>
         </div>
+
+        <!-- Or Ingest Server Folder -->
+        <div class="mt-4 pt-3 border-t border-slate-700/60">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Or Ingest Server Folder</label>
+          <div class="flex items-center space-x-1.5">
+            <input type="text" id="folder-path-input" value="storage/pdf" placeholder="e.g. storage/pdf" class="flex-1 bg-surface-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 outline-none focus:border-brand-500">
+            <button onclick="handleFolderIngest()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white rounded-lg text-xs font-medium transition flex items-center space-x-1 shrink-0">
+              <i data-lucide="folders" class="w-3.5 h-3.5"></i>
+              <span>Ingest</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Document List -->
@@ -529,6 +541,40 @@
         loadDocuments();
       } catch (err) {
         alert('Upload Error: ' + err.message);
+        uploadStatus.classList.add('hidden');
+      }
+    }
+
+    // Ingest Server Folder
+    async function handleFolderIngest() {
+      const folderPath = document.getElementById('folder-path-input').value.trim();
+      if (!folderPath) {
+        alert('Please specify a folder path.');
+        return;
+      }
+
+      uploadStatus.classList.remove('hidden');
+      uploadStatusText.innerText = `Scanning and ingesting folder "${folderPath}"...`;
+
+      try {
+        const res = await fetch(`${API_BASE}/api/documents/ingest-folder`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ folder_path: folderPath })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.detail || 'Folder ingestion failed');
+        }
+
+        const data = await res.json();
+        uploadStatusText.innerText = `Ingested ${data.successful_ingestions} PDFs (${data.total_chunks} chunks)!`;
+        setTimeout(() => uploadStatus.classList.add('hidden'), 3500);
+
+        loadDocuments();
+      } catch (err) {
+        alert('Folder Ingestion Error: ' + err.message);
         uploadStatus.classList.add('hidden');
       }
     }

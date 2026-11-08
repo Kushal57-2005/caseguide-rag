@@ -26,3 +26,19 @@ class DocumentDeleteResponse(BaseModel):
     message: str
     document_id: str
 
+
+class FolderIngestRequest(BaseModel):
+    folder_path: str = "storage/pdf"
+    recursive: bool = False
+
+
+class FolderIngestResponse(BaseModel):
+    message: str
+    folder: str
+    total_files_found: int
+    successful_ingestions: int
+    total_chunks: int
+    processed_documents: List[dict]
+    errors: List[dict]
+
+

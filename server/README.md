@@ -142,7 +142,20 @@ List all documents indexed in the vector store:
 curl -X GET "http://127.0.0.1:8000/api/documents/"
 ```
 
-### 4. Delete Document (`DELETE /api/documents/{document_id}`)
+### 4. Ingest an Entire Folder (`POST /api/documents/ingest-folder`)
+
+Batch ingest all PDF files in a server directory:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/api/documents/ingest-folder" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "folder_path": "storage/pdf",
+    "recursive": false
+  }'
+```
+
+### 5. Delete Document (`DELETE /api/documents/{document_id}`)
 
 Remove a document and all its chunks from the vector store:
 

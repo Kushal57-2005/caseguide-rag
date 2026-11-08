@@ -62,3 +62,63 @@ def ingest_pdf_file(
         "total_chunks": len(all_chunks)
     }
 
+
+def ingest_folder(
+    folder_path: str,
+    recursive: bool = False,
+    chunk_size: int = 1000,
+    chunk_overlap: int = 200,
+    batch_size: int = 32
+) -> dict:
+    """
+    Ingests all PDF files found in a specified folder into ChromaDB.
+    """
+    path = Path(folder_path)
+
+    if not path.exists():
+        raise FileNotFoundError(f"Folder '{folder_path}' does not exist.")
+
+    if not path.is_dir():
+        raise NotADirectoryError(f"'{folder_path}' is not a directory.")
+
+    pdf_files = list(path.rglob("*.pdf") if recursive else path.glob("*.pdf"))
+
+    if not pdf_files:
+        return {
+            "folder": str(path),
+            "total_files_found": 0,
+            "processed_documents": [],
+            "total_chunks": 0
+        }
+
+    processed = []
+    total_chunks = 0
+    errors = []
+
+    for pdf_file in pdf_files:
+        try:
+            result = ingest_pdf_file(
+                file_path=str(pdf_file),
+                original_filename=pdf_file.name,
+                chunk_size=chunk_size,
+                chunk_overlap=chunk_overlap,
+                batch_size=batch_size
+            )
+            processed.append(result)
+            total_chunks += result["total_chunks"]
+        except Exception as e:
+            errors.append({
+                "filename": pdf_file.name,
+                "error": str(e)
+            })
+
+    return {
+        "folder": str(path),
+        "total_files_found": len(pdf_files),
+        "successful_ingestions": len(processed),
+        "processed_documents": processed,
+        "total_chunks": total_chunks,
+        "errors": errors
+    }
+
+

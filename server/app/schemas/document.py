@@ -3,6 +3,8 @@ from app.schemas.document_schema import (
     DocumentInfo,
     DocumentListResponse,
     DocumentDeleteResponse,
+    FolderIngestRequest,
+    FolderIngestResponse,
 )
 
 __all__ = [
@@ -10,5 +12,6 @@ __all__ = [
     "DocumentInfo",
     "DocumentListResponse",
     "DocumentDeleteResponse",
+    "FolderIngestRequest",
+    "FolderIngestResponse",
 ]
-

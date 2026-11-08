@@ -1,72 +1,54 @@
+import sys
 from pathlib import Path
-from uuid import uuid4
 
-from app.services.pdf_loader import extract_text_from_pdf
-from app.services.text_cleaner import clean_text
-from app.services.text_splitter import split_text
-from app.services.embedding_service import generate_embedding
-from app.services.vector_store import add_chunks
+from app.services.ingestion_service import ingest_pdf_file, ingest_folder
+
+DEFAULT_PATH = "storage/pdf"
 
 
-PDF_PATH = "storage/pdf/rain_data.pdf"
+def main():
+    target = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_PATH
+    target_path = Path(target)
 
-def ingest_pdf(pdf_path: str):
-    document_id = str(uuid4())
+    if not target_path.exists():
+        print(f"Error: Path '{target}' does not exist.")
+        sys.exit(1)
 
-    print("1. Extracting PDF text...")
+    if target_path.is_dir():
+        print(f"\nScanning folder: {target_path.resolve()} for PDF files...")
+        summary = ingest_folder(str(target_path))
 
-    document = extract_text_from_pdf(pdf_path)
+        print(f"\n================ FOLDER INGESTION SUMMARY ================")
+        print(f"Folder: {summary['folder']}")
+        print(f"PDF files found: {summary['total_files_found']}")
+        print(f"Successfully ingested: {summary['successful_ingestions']}")
+        print(f"Total chunks created: {summary['total_chunks']}")
 
-    all_chunks = []
+        if summary["processed_documents"]:
+            print("\nIngested Documents:")
+            for doc in summary["processed_documents"]:
+                print(f" - {doc['filename']} | Pages: {doc['total_pages']} | Chunks: {doc['total_chunks']} | ID: {doc['document_id']}")
 
-    print("2. Cleaning and chunking...")
+        if summary["errors"]:
+            print("\nErrors encountered:")
+            for err in summary["errors"]:
+                print(f" - {err['filename']}: {err['error']}")
 
-    for page in document["pages"]:
-        cleaned_text = clean_text(page["text"])
+        print("=========================================================\n")
 
-        chunks = split_text(
-            cleaned_text,
-            chunk_size=1000,
-            chunk_overlap=200
-        )
-
-        for index, chunk in enumerate(chunks):
-            all_chunks.append({
-                "content": chunk,
-                "metadata": {
-                    "document_id": document_id,
-                    "filename": document["filename"],
-                    "page_number": page["page_number"],
-                    "chunk_index": index
-                }
-            })
-
-    print(f"Total chunks created: {len(all_chunks)}")
-
-    print("3. Generating embeddings and storing...")
-
-    batch_size = 32
-
-    for start in range(0, len(all_chunks), batch_size):
-        batch = all_chunks[start:start + batch_size]
-
-        embeddings = [
-            generate_embedding(chunk["content"])
-            for chunk in batch
-        ]
-
-        add_chunks(batch, embeddings)
-
-        print(
-            f"Stored {min(start + batch_size, len(all_chunks))}"
-            f"/{len(all_chunks)} chunks"
-        )
-
-    print("\nPDF ingestion completed!")
-    print("Document ID:", document_id)
-
-    return document_id
+    elif target_path.is_file() and target_path.suffix.lower() == ".pdf":
+        print(f"\nIngesting single PDF: {target_path.resolve()}...")
+        result = ingest_pdf_file(str(target_path), original_filename=target_path.name)
+        print(f"\n================ INGESTION SUCCESS ================")
+        print(f"Document ID: {result['document_id']}")
+        print(f"Filename: {result['filename']}")
+        print(f"Pages: {result['total_pages']}")
+        print(f"Total Chunks: {result['total_chunks']}")
+        print("===================================================\n")
+    else:
+        print(f"Error: '{target}' is not a PDF file or a folder.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
-    ingest_pdf(PDF_PATH)
+    main()

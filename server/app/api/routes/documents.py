@@ -7,8 +7,10 @@ from app.schemas.document_schema import (
     DocumentListResponse,
     DocumentInfo,
     DocumentDeleteResponse,
+    FolderIngestRequest,
+    FolderIngestResponse,
 )
-from app.services.ingestion_service import ingest_pdf_file
+from app.services.ingestion_service import ingest_pdf_file, ingest_folder
 from app.services.vector_store import list_documents, delete_document
 
 router = APIRouter(
@@ -55,6 +57,33 @@ async def upload_document(file: UploadFile = File(...)):
         raise HTTPException(
             status_code=500,
             detail=f"Failed to process and index PDF: {str(e)}"
+        )
+
+
+@router.post("/ingest-folder", response_model=FolderIngestResponse)
+def ingest_directory(request: FolderIngestRequest):
+    try:
+        summary = ingest_folder(
+            folder_path=request.folder_path,
+            recursive=request.recursive
+        )
+        return FolderIngestResponse(
+            message=f"Ingested {summary['successful_ingestions']}/{summary['total_files_found']} PDF files into ChromaDB.",
+            folder=summary["folder"],
+            total_files_found=summary["total_files_found"],
+            successful_ingestions=summary["successful_ingestions"],
+            total_chunks=summary["total_chunks"],
+            processed_documents=summary["processed_documents"],
+            errors=summary["errors"]
+        )
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except NotADirectoryError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to ingest folder: {str(e)}"
         )
 
 
