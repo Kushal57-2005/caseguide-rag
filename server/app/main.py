@@ -32,14 +32,20 @@ INDEX_FILE = STATIC_DIR / "index.html"
 @app.get("/", include_in_schema=False)
 def serve_ui():
     if INDEX_FILE.exists():
-        return FileResponse(INDEX_FILE)
+        return FileResponse(
+            INDEX_FILE,
+            headers={"Cache-Control": "no-cache, no-store, must-revalidate"}
+        )
     return {"message": "RAG API is running"}
 
 
 @app.get("/ui", include_in_schema=False)
 def serve_ui_explicit():
     if INDEX_FILE.exists():
-        return FileResponse(INDEX_FILE)
+        return FileResponse(
+            INDEX_FILE,
+            headers={"Cache-Control": "no-cache, no-store, must-revalidate"}
+        )
     return {"message": "RAG API is running"}
 
 
