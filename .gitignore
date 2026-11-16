@@ -18,14 +18,6 @@ server/.env.*
 !.env.example
 !server/.env.example
 
-# Vector Database Data & Temporary Storage
-storage/chroma_db/
-server/storage/chroma_db/
-storage/pdf/*.pdf
-server/storage/pdf/*.pdf
-!storage/pdf/.gitkeep
-!server/storage/pdf/.gitkeep
-
 # IDEs & OS Files
 .vscode/
 .idea/

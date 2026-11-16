@@ -14,10 +14,6 @@ ENV/
 .env.*
 !.env.example
 
-# Vector Database Data & Temporary Storage
-storage/chroma_db/
-storage/pdf/*.pdf
-!storage/pdf/.gitkeep
 
 # IDEs & OS Files
 .vscode/
