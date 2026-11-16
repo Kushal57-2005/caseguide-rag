@@ -4,7 +4,7 @@ from uuid import uuid4
 from app.services.pdf_loader import extract_text_from_pdf
 from app.services.text_cleaner import clean_text
 from app.services.text_splitter import split_text
-from app.services.embedding_service import generate_embedding
+from app.services.embedding_service import generate_embedding, generate_embeddings
 from app.services.vector_store import add_chunks
 
 
@@ -13,7 +13,8 @@ def ingest_pdf_file(
     original_filename: str | None = None,
     chunk_size: int = 1000,
     chunk_overlap: int = 200,
-    batch_size: int = 32
+    batch_size: int = 32,
+    show_progress: bool = True
 ) -> dict:
     document_id = str(uuid4())
     display_filename = original_filename or Path(file_path).name
@@ -44,16 +45,25 @@ def ingest_pdf_file(
                 }
             })
 
-    # 3. Generate embeddings and store in ChromaDB
+    if show_progress:
+        print(f"  -> Extracted {len(all_chunks)} chunks across {document['total_pages']} pages. Indexing embeddings...", flush=True)
+
+    # 3. Generate batch embeddings and store in ChromaDB
     for start in range(0, len(all_chunks), batch_size):
         batch = all_chunks[start:start + batch_size]
+        texts = [chunk["content"] for chunk in batch]
 
-        embeddings = [
-            generate_embedding(chunk["content"], input_type="passage")
-            for chunk in batch
-        ]
+        embeddings = generate_embeddings(texts, input_type="passage")
 
         add_chunks(batch, embeddings)
+
+        if show_progress:
+            done = min(start + batch_size, len(all_chunks))
+            pct = int((done / len(all_chunks)) * 100)
+            print(f"\r  [{pct:3d}%] Indexed {done}/{len(all_chunks)} chunks...", end="", flush=True)
+
+    if show_progress and all_chunks:
+        print(flush=True)
 
     return {
         "document_id": document_id,
@@ -95,18 +105,22 @@ def ingest_folder(
     total_chunks = 0
     errors = []
 
-    for pdf_file in pdf_files:
+    for idx, pdf_file in enumerate(pdf_files, 1):
+        print(f"\n[{idx}/{len(pdf_files)}] Processing '{pdf_file.name}'...", flush=True)
         try:
             result = ingest_pdf_file(
                 file_path=str(pdf_file),
                 original_filename=pdf_file.name,
                 chunk_size=chunk_size,
                 chunk_overlap=chunk_overlap,
-                batch_size=batch_size
+                batch_size=batch_size,
+                show_progress=True
             )
             processed.append(result)
             total_chunks += result["total_chunks"]
+            print(f"  ✓ Completed '{pdf_file.name}' ({result['total_chunks']} chunks stored)", flush=True)
         except Exception as e:
+            print(f"  ✗ Error in '{pdf_file.name}': {e}", flush=True)
             errors.append({
                 "filename": pdf_file.name,
                 "error": str(e)

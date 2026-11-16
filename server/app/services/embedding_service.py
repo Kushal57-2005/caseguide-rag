@@ -24,3 +24,18 @@ def generate_embedding(text: str, input_type: str = "passage"):
     )
 
     return response.data[0].embedding
+
+
+def generate_embeddings(texts: list[str], input_type: str = "passage") -> list[list[float]]:
+    if not texts:
+        return []
+
+    response = client.embeddings.create(
+        model=EMBEDDING_MODEL,
+        input=texts,
+        extra_body={
+            "input_type": input_type
+        }
+    )
+
+    return [item.embedding for item in response.data]

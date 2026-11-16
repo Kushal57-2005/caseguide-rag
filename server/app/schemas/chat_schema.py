@@ -20,6 +20,9 @@ class SourceResponse(BaseModel):
     filename: str
     page_number: int
     similarity: float
+    url: Optional[str] = None
+    title: Optional[str] = None
+
 
 
 class ChatResponse(BaseModel):
