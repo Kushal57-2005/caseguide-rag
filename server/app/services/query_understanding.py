@@ -45,9 +45,10 @@ def extract_json_from_text(text: str) -> dict:
     return {}
 
 
-def understand_query(original_query: str) -> dict:
+def understand_query(original_query: str, conversation_history: list = None) -> dict:
     """
     Performs LLM-based query understanding before document retrieval.
+    Optionally incorporates multi-turn conversation history to resolve follow-ups.
     Generates:
       - refined_query: query optimized for legal document retrieval
       - plain_language_query: simplified plain-English summary of what the user is asking
@@ -57,6 +58,7 @@ def understand_query(original_query: str) -> dict:
     """
     system_prompt = """You are an expert legal query analyzer.
 Your task is to analyze the user's question and produce a structured JSON object.
+If prior conversation turns are provided, use them to resolve ambiguous pronouns, follow-up questions, and references.
 
 Return valid JSON with exactly these keys:
 {
@@ -73,12 +75,25 @@ Important:
 - Output ONLY valid JSON.
 """
 
+    history_str = ""
+    if conversation_history and len(conversation_history) > 0:
+        history_lines = []
+        for msg in conversation_history[-6:]:
+            role = msg.role if hasattr(msg, "role") else msg.get("role", "user")
+            content = msg.content if hasattr(msg, "content") else msg.get("content", "")
+            if content:
+                history_lines.append(f"{role.capitalize()}: {content}")
+        if history_lines:
+            history_str = "Prior Conversation History:\n" + "\n".join(history_lines) + "\n\n"
+
+    user_content = f"{history_str}User question:\n{original_query}"
+
     try:
         response = client.chat.completions.create(
             model=LLM_MODEL,
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": f"User question:\n{original_query}"}
+                {"role": "user", "content": user_content}
             ],
             response_format={"type": "json_object"},
             temperature=0.1,

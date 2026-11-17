@@ -193,7 +193,8 @@ def generate_structured_response(
     query_understanding: Dict[str, Any],
     retrieved_chunks: List[Dict[str, Any]],
     top_k: int = 5,
-    error_status: Optional[str] = None
+    error_status: Optional[str] = None,
+    conversation_history: Optional[List[Any]] = None
 ) -> StructuredRAGResponse:
     """
     Main orchestration service combining Query Understanding, RAG Retrieval Metadata,
@@ -353,7 +354,18 @@ Notes for status:
 - "INSUFFICIENT_EVIDENCE": Excerpts do not contain relevant legal information.
 """
 
-    user_prompt = f"""User Question:
+    history_block = ""
+    if conversation_history and len(conversation_history) > 0:
+        history_lines = []
+        for msg in conversation_history[-6:]:
+            role = msg.role if hasattr(msg, "role") else msg.get("role", "user")
+            content = msg.content if hasattr(msg, "content") else msg.get("content", "")
+            if content:
+                history_lines.append(f"{role.capitalize()}: {content}")
+        if history_lines:
+            history_block = "Prior Conversation Context:\n" + "\n".join(history_lines) + "\n\n"
+
+    user_prompt = f"""{history_block}User Question:
 {original_query}
 
 Plain Language Translation:

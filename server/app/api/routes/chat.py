@@ -17,8 +17,11 @@ router = APIRouter(
 @router.post("/", response_model=StructuredRAGResponse)
 def chat(request: ChatRequest):
     try:
-        # Step 1: Query Understanding stage
-        query_understanding = understand_query(request.question)
+        # Step 1: Query Understanding stage with conversation history
+        query_understanding = understand_query(
+            original_query=request.question,
+            conversation_history=request.conversation_history
+        )
         search_query = query_understanding.get("refined_query") or request.question
 
         # Step 2: Retrieve relevant chunks using refined query
@@ -36,12 +39,13 @@ def chat(request: ChatRequest):
                 document_id=request.document_id
             )
 
-        # Step 3: Generate structured response combining LLM + RAG
+        # Step 3: Generate structured response combining LLM + RAG + conversation history
         structured_response = generate_structured_response(
             original_query=request.question,
             query_understanding=query_understanding,
             retrieved_chunks=retrieved_chunks,
-            top_k=request.top_k
+            top_k=request.top_k,
+            conversation_history=request.conversation_history
         )
 
         return structured_response

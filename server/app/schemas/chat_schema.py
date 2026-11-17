@@ -2,6 +2,11 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 
 
+class HistoryMessage(BaseModel):
+    role: str
+    content: str
+
+
 class ChatRequest(BaseModel):
     question: str = Field(
         ...,
@@ -14,6 +19,7 @@ class ChatRequest(BaseModel):
         le=20
     )
     document_id: Optional[str] = None
+    conversation_history: Optional[List[HistoryMessage]] = Field(default_factory=list)
 
 
 class QueryInfo(BaseModel):
