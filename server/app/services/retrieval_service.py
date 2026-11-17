@@ -1,17 +1,22 @@
+import os
 from typing import List, Optional
 from app.services.embedding_service import generate_embedding
 from app.services.vector_store import search_chunks
+
+# Default similarity threshold: chunks with similarity < 0.4 are considered irrelevant
+SIMILARITY_THRESHOLD = float(os.getenv("SIMILARITY_THRESHOLD", "0.4"))
 
 
 def retrieve_documents(
     question: str,
     top_k: int = 5,
-    min_similarity: float | None = None,
+    min_similarity: float | None = SIMILARITY_THRESHOLD,
     document_id: str | None = None
 ) -> List[dict]:
     """
     Retrieves top_k chunks from ChromaDB for the given query.
     Calculates cosine similarity correctly from ChromaDB's cosine distance metric.
+    Filters out any chunks with similarity_score < min_similarity (default: 0.4).
     Preserves all retrieval metadata (chunk_id, document_id, file_name, page_number, raw_distance, similarity_score, retrieval_rank).
     """
 

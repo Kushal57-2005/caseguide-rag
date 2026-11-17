@@ -214,6 +214,13 @@ def generate_structured_response(
         description=str(query_understanding.get("description") or original_query)
     )
 
+    # Enforce minimum similarity threshold of 0.4: filter out useless chunks so they are never sent to the LLM
+    SIMILARITY_THRESHOLD = 0.4
+    retrieved_chunks = [
+        c for c in (retrieved_chunks or [])
+        if (c.get("similarity_score") is not None and c.get("similarity_score") >= SIMILARITY_THRESHOLD)
+    ]
+
     retrieval_details = build_retrieval_details(retrieved_chunks)
 
     # Handle Explicit Errors or Empty Retrieval
@@ -242,19 +249,22 @@ def generate_structured_response(
             metadata=ResponseMetadata(
                 status=error_status,
                 model=LLM_MODEL,
-                retrieval_method="ChromaDB Dense Vector Search (Nemotron Embedding)",
+                retrieval_method="ChromaDB Dense Vector Search (Nemotron Embedding) [Threshold >= 0.40]",
                 top_k=top_k
             )
         )
 
+    # Fallback message when there is no retrieval >= 0.4 threshold
     if not retrieved_chunks:
         return StructuredRAGResponse(
             query=q_info,
             problem_summary=p_summary,
             answer=AnswerDetails(
-                summary="The provided legal documents do not contain sufficient information to answer this question.",
+                summary="No relevant legal provisions or documents found in the database for this inquiry.",
                 explanation=[
-                    "No relevant statutory sections, rules, or provisions were retrieved from the current document database for this inquiry."
+                    "The retrieved document passages did not meet the minimum similarity threshold of 0.40 required for verified grounding.",
+                    "The current knowledge base is strictly focused on Indian motor vehicle laws, including The Motor Vehicles Act 1988, The Motor Vehicles (Amendment) Act 2019, Maharashtra Motor Vehicles Rules 1989, and official Traffic Violation schedules.",
+                    "Questions unrelated to these indexed traffic and transport statutes (such as general knowledge, current date/time, or unindexed laws) cannot be answered from the indexed files."
                 ]
             ),
             citations=[],
@@ -262,8 +272,16 @@ def generate_structured_response(
             next_steps=NextSteps(actions=[
                 ActionStep(
                     step=1,
-                    title="Consult Relevant Legislation or Counsel",
-                    description="The indexed database currently covers the Motor Vehicles Act 1988 and Maharashtra Rules. For topics outside this scope, consult a qualified advocate.",
+                    title="Ask a Motor Vehicle or Traffic Law Question",
+                    description="Rephrase your question around topics covered by the indexed documents, such as traffic fines, road accidents, driving licences, vehicle registration, or safety equipment.",
+                    source_ids=[],
+                    source_pages=[],
+                    source_type="GENERAL"
+                ),
+                ActionStep(
+                    step=2,
+                    title="Upload Relevant Legal Documents",
+                    description="If your question relates to a different act, state rule, or policy, upload the PDF document via the 'Manage Documents' drawer to index it.",
                     source_ids=[],
                     source_pages=[],
                     source_type="GENERAL"
@@ -271,17 +289,18 @@ def generate_structured_response(
             ]),
             warnings=[
                 WarningItem(
-                    type="INSUFFICIENT_EVIDENCE",
-                    message="No matching legal provisions were found in the indexed database to support an answer."
+                    type="NO_RELEVANT_DATA",
+                    message="No indexed documents met the 0.40 similarity threshold for this query. To prevent fabricated answers, retrieval was treated as a fallback."
                 )
             ],
             limitations=[
-                "The current knowledge base lacks documents addressing the specific factual circumstances requested."
+                "The query falls outside the scope of the indexed motor vehicle laws or did not match any section with >= 0.40 similarity.",
+                "Only verified passages meeting the 0.40 similarity threshold are passed to the language model."
             ],
             metadata=ResponseMetadata(
                 status="INSUFFICIENT_EVIDENCE",
                 model=LLM_MODEL,
-                retrieval_method="ChromaDB Dense Vector Search (Nemotron Embedding)",
+                retrieval_method="ChromaDB Dense Vector Search (Nemotron Embedding) [Threshold >= 0.40]",
                 top_k=top_k
             )
         )

@@ -24,18 +24,20 @@ def chat(request: ChatRequest):
         )
         search_query = query_understanding.get("refined_query") or request.question
 
-        # Step 2: Retrieve relevant chunks using refined query
+        # Step 2: Retrieve relevant chunks using refined query with 0.4 similarity threshold
         retrieved_chunks = retrieve_documents(
             question=search_query,
             top_k=request.top_k,
+            min_similarity=0.4,
             document_id=request.document_id
         )
 
-        # Fallback to original question if refined query returned nothing
+        # Fallback to original question if refined query returned nothing with 0.4 threshold
         if not retrieved_chunks and search_query != request.question:
             retrieved_chunks = retrieve_documents(
                 question=request.question,
                 top_k=request.top_k,
+                min_similarity=0.4,
                 document_id=request.document_id
             )
 
