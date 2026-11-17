@@ -3,6 +3,7 @@ import os
 import re
 from openai import OpenAI
 from dotenv import load_dotenv
+from app.services.llm_tracker import llm_tracker
 
 load_dotenv()
 
@@ -89,6 +90,7 @@ Important:
     user_content = f"{history_str}User question:\n{original_query}"
 
     try:
+        llm_tracker.record_call("query_understanding", LLM_MODEL, user_content)
         response = client.chat.completions.create(
             model=LLM_MODEL,
             messages=[

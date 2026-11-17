@@ -644,8 +644,43 @@
       return msgDiv;
     }
 
-    // Render Assistant Response across all 9 Structured Sections
+    // Render Assistant Response across all 9 Structured Sections (or Backend Fallback)
     function renderAssistantResponse(container, data, turnIndex) {
+      // 1. Direct Backend Fallback Response Handling
+      if (data.status === 'fallback') {
+        const fallbackText = data.response || "I couldn't find enough relevant information to answer your question accurately.";
+        container.innerHTML = `
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 p-[1px] shadow shrink-0 mt-1">
+            <div class="w-full h-full bg-surface-900 rounded-[11px] flex items-center justify-center">
+              <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i>
+            </div>
+          </div>
+          <div class="flex-1 bg-surface-900/95 border border-amber-500/30 rounded-2xl rounded-tl-sm p-5 md:p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 flex-wrap gap-2">
+              <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-amber-300">CaseGuide Scope Notice</h3>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                Similarity Threshold Fallback (Score &lt; 0.40)
+              </span>
+            </div>
+            <div class="p-4 rounded-xl bg-surface-850/80 border border-slate-800 text-xs md:text-sm text-slate-200 leading-relaxed whitespace-pre-wrap font-sans">
+${escapeHtml(fallbackText)}
+            </div>
+            <div class="pt-2 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="flex items-center space-x-1.5 text-slate-400">
+                <i data-lucide="info" class="w-3.5 h-3.5 text-slate-400"></i>
+                <span>Grounded response policy enforced &bull; 0 LLM hallucinations prevented</span>
+              </span>
+              <span class="font-mono text-slate-400">sources: 0</span>
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
       const q = data.query || {};
       const ps = data.problem_summary || {};
       const ans = data.answer || {};

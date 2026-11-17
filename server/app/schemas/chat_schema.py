@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Any, Union
 
 
 class HistoryMessage(BaseModel):
@@ -104,7 +104,25 @@ class StructuredRAGResponse(BaseModel):
     metadata: ResponseMetadata
 
 
-# Keep alias for compatibility
+# Fallback message specification
+FALLBACK_MESSAGE = (
+    "I couldn't find enough relevant information to answer your question accurately.\n\n"
+    "CaseGuide currently specializes in Indian Motor Vehicle Law, including traffic violations, "
+    "fines, driving licences, vehicle registration, permits, road accidents, "
+    "insurance-related motor vehicle provisions, and road safety regulations.\n\n"
+    "Please rephrase your question with more details about your Motor Vehicle Law issue "
+    "so I can help you find relevant legal information."
+)
+
+
+class FallbackResponse(BaseModel):
+    status: str = "fallback"
+    response: str
+    sources: List[Any] = Field(default_factory=list)
+
+
+# Keep aliases for compatibility
 ChatResponse = StructuredRAGResponse
+ChatResponseUnion = Union[StructuredRAGResponse, FallbackResponse]
 
 

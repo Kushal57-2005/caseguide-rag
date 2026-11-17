@@ -20,6 +20,7 @@ from app.schemas.chat_schema import (
     ResponseMetadata,
 )
 from app.services.query_understanding import extract_json_from_text
+from app.services.llm_tracker import llm_tracker
 
 load_dotenv()
 
@@ -425,6 +426,7 @@ Retrieved Document Excerpts:
 Analyze the legal issue and generate the structured JSON response based strictly on the excerpts."""
 
     try:
+        llm_tracker.record_call("generation_service", LLM_MODEL, user_prompt)
         response = client.chat.completions.create(
             model=LLM_MODEL,
             messages=[
