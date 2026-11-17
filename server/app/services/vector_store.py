@@ -1,7 +1,11 @@
+from pathlib import Path
 import chromadb
 
+SERVER_DIR = Path(__file__).resolve().parent.parent.parent
+CHROMA_PATH = str(SERVER_DIR / "storage" / "chroma_db")
+
 client = chromadb.PersistentClient(
-    path="./storage/chroma_db"
+    path=CHROMA_PATH
 )
 
 COLLECTION_NAME = "pdf_documents"

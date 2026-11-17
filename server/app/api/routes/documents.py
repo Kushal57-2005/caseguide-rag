@@ -18,7 +18,8 @@ router = APIRouter(
     tags=["Documents"]
 )
 
-STORAGE_DIR = Path("storage/pdf")
+SERVER_DIR = Path(__file__).resolve().parent.parent.parent
+STORAGE_DIR = SERVER_DIR / "storage" / "pdf"
 STORAGE_DIR.mkdir(parents=True, exist_ok=True)
 
 

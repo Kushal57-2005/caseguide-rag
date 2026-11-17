@@ -108,3 +108,4 @@ Important:
             "category": "General Legal",
             "description": original_query.strip()
         }
+

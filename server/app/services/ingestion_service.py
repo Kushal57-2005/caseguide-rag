@@ -86,12 +86,20 @@ def ingest_folder(
     path = Path(folder_path)
 
     if not path.exists():
-        raise FileNotFoundError(f"Folder '{folder_path}' does not exist.")
+        server_dir = Path(__file__).resolve().parent.parent.parent
+        alt_path = server_dir / folder_path
+        if alt_path.exists():
+            path = alt_path
+        else:
+            raise FileNotFoundError(f"Folder '{folder_path}' does not exist.")
 
     if not path.is_dir():
         raise NotADirectoryError(f"'{folder_path}' is not a directory.")
 
     pdf_files = list(path.rglob("*.pdf") if recursive else path.glob("*.pdf"))
+    if not pdf_files and not recursive:
+        # Fallback to scanning subdirectories if direct folder has subfolders containing PDFs
+        pdf_files = list(path.rglob("*.pdf"))
 
     if not pdf_files:
         return {
