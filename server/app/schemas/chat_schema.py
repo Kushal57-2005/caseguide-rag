@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import List, Optional
 
 
 class ChatRequest(BaseModel):
@@ -16,17 +16,89 @@ class ChatRequest(BaseModel):
     document_id: Optional[str] = None
 
 
-class SourceResponse(BaseModel):
-    filename: str
+class QueryInfo(BaseModel):
+    original_query: str
+    refined_query: str
+    plain_language_query: str
+
+
+class ProblemSummary(BaseModel):
+    title: str
+    category: str
+    description: str
+
+
+class AnswerDetails(BaseModel):
+    summary: str
+    explanation: List[str] = Field(default_factory=list)
+
+
+class CitationItem(BaseModel):
+    citation_id: str
+    act: str
+    section: str
+    title: str
+    supporting_text: str
+    source_id: str
+    file_name: str
     page_number: int
-    similarity: float
-    url: Optional[str] = None
-    title: Optional[str] = None
 
 
+class RetrievalChunkItem(BaseModel):
+    chunk_id: str
+    document_id: str
+    file_name: str
+    page_number: int
+    raw_distance: float
+    similarity_score: Optional[float] = None
+    reranker_score: Optional[float] = None
+    retrieval_rank: int
+    content: str
 
-class ChatResponse(BaseModel):
-    question: str
-    answer: str
-    sources: list[SourceResponse]
+
+class RetrievalDetails(BaseModel):
+    total_chunks_retrieved: int
+    chunks: List[RetrievalChunkItem] = Field(default_factory=list)
+
+
+class ActionStep(BaseModel):
+    step: int
+    title: str
+    description: str
+    source_ids: List[str] = Field(default_factory=list)
+    source_pages: List[int] = Field(default_factory=list)
+    source_type: str = "RAG_AND_LLM"
+
+
+class NextSteps(BaseModel):
+    actions: List[ActionStep] = Field(default_factory=list)
+
+
+class WarningItem(BaseModel):
+    type: str
+    message: str
+
+
+class ResponseMetadata(BaseModel):
+    status: str
+    model: str
+    retrieval_method: str
+    top_k: int
+
+
+class StructuredRAGResponse(BaseModel):
+    query: QueryInfo
+    problem_summary: ProblemSummary
+    answer: AnswerDetails
+    citations: List[CitationItem] = Field(default_factory=list)
+    retrieval: RetrievalDetails
+    next_steps: NextSteps
+    warnings: List[WarningItem] = Field(default_factory=list)
+    limitations: List[str] = Field(default_factory=list)
+    metadata: ResponseMetadata
+
+
+# Keep alias for compatibility
+ChatResponse = StructuredRAGResponse
+
 

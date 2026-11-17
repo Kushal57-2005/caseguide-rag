@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Marked.js for markdown rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <!-- DOMPurify to sanitize markdown -->
+  <!-- DOMPurify to sanitize HTML -->
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -53,110 +53,8 @@
       background: #475569;
     }
 
-    /* Markdown prose styles inside answers */
-    .prose-custom {
-      color: #e2e8f0;
-      line-height: 1.7;
-    }
-    .prose-custom p {
-      margin-bottom: 0.85em;
-    }
-    .prose-custom p:last-child {
-      margin-bottom: 0;
-    }
-    .prose-custom strong {
-      color: #f8fafc;
-      font-weight: 600;
-    }
-    .prose-custom ul {
-      list-style-type: disc;
-      padding-left: 1.4rem;
-      margin-bottom: 0.85em;
-    }
-    .prose-custom ol {
-      list-style-type: decimal;
-      padding-left: 1.4rem;
-      margin-bottom: 0.85em;
-    }
-    .prose-custom li {
-      margin-bottom: 0.35em;
-    }
-    .prose-custom h1, .prose-custom h2, .prose-custom h3 {
-      color: #f8fafc;
-      font-weight: 700;
-      margin-top: 1.2em;
-      margin-bottom: 0.5em;
-    }
-    .prose-custom h1 { font-size: 1.35rem; }
-    .prose-custom h2 { font-size: 1.2rem; }
-    .prose-custom h3 { font-size: 1.05rem; }
-    .prose-custom code {
-      background: #0f172a;
-      border: 1px solid #334155;
-      color: #38bdf8;
-      padding: 0.15rem 0.35rem;
-      border-radius: 0.35rem;
-      font-size: 0.875em;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
-    .prose-custom pre {
-      background: #090d16;
-      border: 1px solid #334155;
-      padding: 0.85rem;
-      border-radius: 0.5rem;
-      overflow-x: auto;
-      margin-bottom: 0.85em;
-    }
-    .prose-custom pre code {
-      background: transparent;
-      border: none;
-      padding: 0;
-      color: #f1f5f9;
-    }
-    .prose-custom blockquote {
-      border-left: 3px solid #6366f1;
-      padding-left: 0.85rem;
-      color: #94a3b8;
-      font-style: italic;
-      margin: 0.85em 0;
-    }
-
-    /* Source Citation Pill */
-    .source-citation-tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.15rem 0.55rem;
-      background: rgba(99, 102, 241, 0.2);
-      color: #818cf8;
-      border: 1px solid rgba(99, 102, 241, 0.4);
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin: 0 0.15rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      vertical-align: middle;
-    }
-    .source-citation-tag:hover {
-      background: #4f46e5;
-      color: #ffffff;
-      border-color: #6366f1;
-      transform: translateY(-1px);
-    }
-
-    @keyframes pulse-highlight {
-      0%, 100% {
-        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
-        border-color: #334155;
-      }
-      50% {
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5);
-        border-color: #6366f1;
-      }
-    }
-    .highlight-card {
-      animation: pulse-highlight 1.5s ease-in-out 2;
+    details summary::-webkit-details-marker {
+      display: none;
     }
   </style>
 </head>
@@ -167,7 +65,7 @@
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-cyan-400 p-[1px] shadow-lg shadow-brand-500/20">
         <div class="w-full h-full bg-surface-900 rounded-[11px] flex items-center justify-center">
-          <i data-lucide="bot" class="w-5 h-5 text-indigo-400"></i>
+          <i data-lucide="scale" class="w-5 h-5 text-indigo-400"></i>
         </div>
       </div>
       <div>
@@ -178,7 +76,7 @@
             Online
           </span>
         </div>
-        <p class="text-xs text-slate-400">NVIDIA NIM • Nemotron &amp; Gemma • ChromaDB</p>
+        <p class="text-xs text-slate-400">Structured Legal Intelligence • NVIDIA NIM &amp; ChromaDB</p>
       </div>
     </div>
 
@@ -216,31 +114,31 @@
             <i data-lucide="sparkles" class="w-8 h-8 text-white"></i>
           </div>
           <div>
-            <h2 class="text-xl md:text-2xl font-bold text-white tracking-tight">Ask Questions Grounded in Your Documents</h2>
-            <p class="text-sm text-slate-400 mt-2 max-w-lg mx-auto">
-              Query your indexed PDFs. The assistant uses NVIDIA Nemotron embeddings to retrieve relevant passages and strictly grounds its answers with citations.
+            <h2 class="text-xl md:text-2xl font-bold text-white tracking-tight">Structured Legal Intelligence Assistant</h2>
+            <p class="text-sm text-slate-400 mt-2 max-w-lg mx-auto leading-relaxed">
+              Ask legal questions grounded in indexed acts and rules. Responses are analyzed, verified against statutory excerpts, and presented in structured sections with verbatim citations and official PDF links.
             </p>
           </div>
 
           <!-- Suggested Questions -->
           <div class="pt-2">
             <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Try asking:</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left">
               <button onclick="askPrompt(this.innerText)" class="p-3 text-xs bg-surface-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white rounded-xl border border-slate-700/60 transition group flex items-start space-x-2">
                 <i data-lucide="help-circle" class="w-4 h-4 text-brand-400 mt-0.5 shrink-0 group-hover:scale-110 transition"></i>
-                <span>What is Retrieval-Augmented Generation (RAG) and why is it used?</span>
+                <span>What are the legal duties of a driver in case of an accident involving injury?</span>
               </button>
               <button onclick="askPrompt(this.innerText)" class="p-3 text-xs bg-surface-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white rounded-xl border border-slate-700/60 transition group flex items-start space-x-2">
                 <i data-lucide="help-circle" class="w-4 h-4 text-cyan-400 mt-0.5 shrink-0 group-hover:scale-110 transition"></i>
-                <span>What are the key limitations of standard LLMs mentioned in the documents?</span>
+                <span>What protection is provided to Good Samaritans under Section 134A?</span>
               </button>
               <button onclick="askPrompt(this.innerText)" class="p-3 text-xs bg-surface-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white rounded-xl border border-slate-700/60 transition group flex items-start space-x-2">
                 <i data-lucide="help-circle" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0 group-hover:scale-110 transition"></i>
-                <span>How does semantic search differ from keyword search?</span>
+                <span>What is the duty to produce vehicle documents and what is the cure period under Section 133/134?</span>
               </button>
               <button onclick="askPrompt(this.innerText)" class="p-3 text-xs bg-surface-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white rounded-xl border border-slate-700/60 transition group flex items-start space-x-2">
                 <i data-lucide="help-circle" class="w-4 h-4 text-amber-400 mt-0.5 shrink-0 group-hover:scale-110 transition"></i>
-                <span>What is the return window for damaged items according to the policy?</span>
+                <span>Can a driver be arrested if the accident was caused by another party?</span>
               </button>
             </div>
           </div>
@@ -282,7 +180,7 @@
             <textarea
               id="question-input"
               rows="1"
-              placeholder="Ask a question about your documents... (Press Enter to send)"
+              placeholder="Ask a legal or statutory question... (Press Enter to send)"
               class="w-full bg-surface-850 hover:bg-surface-800/90 focus:bg-surface-850 text-slate-100 placeholder-slate-500 rounded-2xl pl-4 pr-14 py-3.5 border border-slate-700 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none resize-none transition shadow-inner text-sm leading-relaxed"
               onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleSend(event); }"
             ></textarea>
@@ -297,7 +195,7 @@
           </form>
 
           <p class="text-center text-[11px] text-slate-400">
-            Answers are strictly extracted from indexed PDF documents with verifiable source citations.
+            Strictly grounded in indexed Indian legal statutes with verifiable citations and direct PDF links.
           </p>
 
         </div>
@@ -336,7 +234,7 @@
           </div>
         </div>
 
-        <!-- Or Ingest Server Folder -->
+        <!-- Ingest Server Folder -->
         <div class="mt-4 pt-3 border-t border-slate-700/60">
           <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Or Ingest Server Folder</label>
           <div class="flex items-center space-x-1.5">
@@ -369,9 +267,26 @@
 
   <!-- ================= JAVASCRIPT ================= -->
   <script>
-    // Determine API Base URL
-    // If opened via http://localhost:8000, use origin; if opened directly as file://, use localhost:8000
     const API_BASE = window.location.origin.startsWith('http') ? window.location.origin : 'http://127.0.0.1:8000';
+
+    const PDF_SOURCE_MAP = {
+      "202501082085049752.pdf": {
+        title: "The Motor Vehicles Act, 1988",
+        url: "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/202501082085049752.pdf"
+      },
+      "20250108215375951.pdf": {
+        title: "Offense & Penalties Schedule",
+        url: "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/20250108215375951.pdf"
+      },
+      "20250108634391784.pdf": {
+        title: "Maharashtra Motor Vehicles Rules, 1989",
+        url: "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/20250108634391784.pdf"
+      },
+      "20250108736472987.pdf": {
+        title: "The Motor Vehicles (Amendment) Act, 2019",
+        url: "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/20250108736472987.pdf"
+      }
+    };
 
     // State
     let conversationHistory = [];
@@ -458,7 +373,9 @@
       docs.forEach(d => {
         const opt = document.createElement('option');
         opt.value = d.document_id;
-        opt.innerText = `${d.filename} (${d.total_chunks} chunks)`;
+        const meta = PDF_SOURCE_MAP[d.filename];
+        const label = meta ? meta.title : d.filename;
+        opt.innerText = `${label} (${d.total_chunks} chunks)`;
         docFilterSelect.appendChild(opt);
       });
       docFilterSelect.value = currentSelected;
@@ -607,42 +524,25 @@
       if (files.length) handleFileUpload(files[0]);
     });
 
-    const PDF_SOURCE_MAP = {
-      "20250108215375951.pdf": "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/20250108215375951.pdf",
-      "202501082085049752.pdf": "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/202501082085049752.pdf",
-      "20250108634391784.pdf": "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/20250108634391784.pdf",
-      "20250108736472987.pdf": "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/20250108736472987.pdf"
-    };
+    // Helper: Build Direct PDF link with #page=N
+    function getPdfUrl(filename, pageNumber) {
+      const meta = PDF_SOURCE_MAP[filename];
+      if (meta && meta.url) {
+        return pageNumber ? `${meta.url}#page=${pageNumber}` : meta.url;
+      }
+      return null;
+    }
 
-    const PDF_SOURCE_URLS = [
-      "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/20250108215375951.pdf",
-      "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/202501082085049752.pdf",
-      "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/20250108634391784.pdf",
-      "https://cdnbbsr.s3waas.gov.in/s35dec707028b05bcbd3a1db5640f842c5/uploads/2025/01/20250108736472987.pdf"
-    ];
-
-    // Format Sources Citations in Text into Clickable PDF Links
-    function enrichCitationsWithBadges(text, turnIndex, sources) {
-      if (!text) return "";
-      return text.replace(/(\[|【)Source\s*(\d+)(\]|】)/gi, (match, p1, numStr, p2) => {
-        const num = parseInt(numStr, 10);
-        const sIndex = num - 1;
-        const source = sources && sources[sIndex] ? sources[sIndex] : null;
-
-        let targetUrl = source ? source.url : null;
-        const filename = source ? source.filename : null;
-        const page = source ? source.page_number : null;
-
-        if (!targetUrl && filename && PDF_SOURCE_MAP[filename]) {
-          const base = PDF_SOURCE_MAP[filename];
-          targetUrl = page ? `${base}#page=${page}` : base;
-        }
-
-        if (!targetUrl) {
-          targetUrl = PDF_SOURCE_URLS[(num - 1) % PDF_SOURCE_URLS.length];
-        }
-
-        return `<a href="${targetUrl}" target="_blank" rel="noopener noreferrer" class="source-citation-tag" onclick="window.open('${targetUrl}', '_blank'); return false;" title="${targetUrl}">📄 Source ${num} ↗</a>`;
+    // Helper: Copy text to clipboard
+    function copyToClipboard(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span class="text-emerald-400 font-medium">Copied</span>`;
+        lucide.createIcons();
+        setTimeout(() => {
+          btn.innerHTML = originalHtml;
+          lucide.createIcons();
+        }, 2000);
       });
     }
 
@@ -720,22 +620,22 @@
     function appendAssistantSkeleton(turnIndex) {
       const msgDiv = document.createElement('div');
       msgDiv.id = `assistant-turn-${turnIndex}`;
-      msgDiv.className = 'flex items-start space-x-3.5 max-w-3xl';
+      msgDiv.className = 'flex items-start space-x-3.5 max-w-4xl w-full mx-auto';
       msgDiv.innerHTML = `
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 p-[1px] shadow shrink-0 mt-0.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 p-[1px] shadow shrink-0 mt-1">
           <div class="w-full h-full bg-surface-900 rounded-[11px] flex items-center justify-center">
-            <i data-lucide="bot" class="w-4 h-4 text-indigo-400"></i>
+            <i data-lucide="scale" class="w-4 h-4 text-indigo-400"></i>
           </div>
         </div>
-        <div class="flex-1 bg-surface-900/90 border border-slate-800 rounded-2xl rounded-tl-sm p-5 shadow-lg space-y-3">
+        <div class="flex-1 bg-surface-900/95 border border-slate-800 rounded-2xl rounded-tl-sm p-6 shadow-xl space-y-4">
           <div class="flex items-center space-x-2 text-xs font-semibold text-brand-400">
             <span class="inline-block w-2 h-2 rounded-full bg-brand-400 animate-ping"></span>
-            <span>Retrieving chunks & generating answer...</span>
+            <span>Query understanding, dense retrieval &amp; citation validation in progress...</span>
           </div>
-          <div class="space-y-2 animate-pulse pt-1">
-            <div class="h-3.5 bg-slate-800 rounded-full w-3/4"></div>
-            <div class="h-3.5 bg-slate-800 rounded-full w-5/6"></div>
-            <div class="h-3.5 bg-slate-800 rounded-full w-2/3"></div>
+          <div class="space-y-2.5 animate-pulse pt-1">
+            <div class="h-4 bg-slate-800 rounded-full w-3/4"></div>
+            <div class="h-4 bg-slate-800 rounded-full w-5/6"></div>
+            <div class="h-4 bg-slate-800 rounded-full w-2/3"></div>
           </div>
         </div>
       `;
@@ -744,29 +644,357 @@
       return msgDiv;
     }
 
-    // Render Assistant Response with Clean Markdown and Inline Clickable PDF Badges
+    // Render Assistant Response across all 9 Structured Sections
     function renderAssistantResponse(container, data, turnIndex) {
-      const rawAnswer = data.answer || "No answer generated.";
-      const sources = data.sources || [];
+      const q = data.query || {};
+      const ps = data.problem_summary || {};
+      const ans = data.answer || {};
+      const citations = data.citations || [];
+      const retrieval = data.retrieval || { total_chunks_retrieved: 0, chunks: [] };
+      const nextSteps = data.next_steps || { actions: [] };
+      const warnings = data.warnings || [];
+      const limitations = data.limitations || [];
+      const meta = data.metadata || {};
 
-      // 1. Process citations in markdown into clickable links to official PDFs
-      const textWithCitations = enrichCitationsWithBadges(rawAnswer, turnIndex, sources);
+      // Status pill styling
+      let statusColor = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+      if (meta.status === "PARTIAL_ANSWER") {
+        statusColor = "bg-amber-500/10 text-amber-400 border-amber-500/30";
+      } else if (meta.status === "INSUFFICIENT_EVIDENCE") {
+        statusColor = "bg-rose-500/10 text-rose-400 border-rose-500/30";
+      }
 
-      // 2. Parse Markdown
-      const htmlContent = DOMPurify.sanitize(marked.parse(textWithCitations), {
-        ADD_ATTR: ['target', 'rel', 'onclick']
-      });
+      // 1. Problem in Short
+      const problemHtml = `
+        <div class="rounded-xl bg-surface-850/80 border border-slate-800/90 p-4 space-y-2.5">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="briefcase" class="w-4 h-4 text-brand-400"></i>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">1. Problem in Short</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+              ${escapeHtml(ps.category || 'General Legal')}
+            </span>
+          </div>
+          <h4 class="text-base font-bold text-slate-100">${escapeHtml(ps.title || 'Legal Issue Inquiry')}</h4>
+          <p class="text-xs md:text-sm text-slate-300 leading-relaxed">${escapeHtml(ps.description || q.original_query || '')}</p>
+        </div>
+      `;
 
-      container.innerHTML = `
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 p-[1px] shadow shrink-0 mt-0.5">
-          <div class="w-full h-full bg-surface-900 rounded-[11px] flex items-center justify-center">
-            <i data-lucide="bot" class="w-4 h-4 text-indigo-400"></i>
+      // 2. Refined Query
+      const refinedQuery = q.refined_query || q.original_query || '';
+      const refinedQueryHtml = `
+        <div class="rounded-xl bg-surface-850/80 border border-slate-800/90 p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="sparkles" class="w-4 h-4 text-cyan-400"></i>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">2. Refined Query</h3>
+              <span class="text-[10px] text-cyan-400/80 bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-800/50">Dense Search Optimized</span>
+            </div>
+            <button onclick="copyToClipboard(this, ${JSON.stringify(refinedQuery)})" class="text-xs text-slate-400 hover:text-slate-200 px-2.5 py-1 rounded bg-surface-900 border border-slate-700/80 hover:bg-slate-700 transition flex items-center space-x-1">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+          <div class="font-mono text-xs text-cyan-200 bg-surface-950/80 p-3 rounded-lg border border-slate-800 select-all leading-relaxed">
+            ${escapeHtml(refinedQuery)}
           </div>
         </div>
-        <div class="flex-1 bg-surface-900/90 border border-slate-800 rounded-2xl rounded-tl-sm p-5 shadow-lg">
-          <div class="prose-custom text-sm">
-            ${htmlContent}
+      `;
+
+      // 3. In Plain Words
+      const plainQueryHtml = `
+        <div class="rounded-xl bg-surface-850/80 border border-slate-800/90 p-4 space-y-2">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">3. In Plain Words</h3>
           </div>
+          <p class="text-xs md:text-sm text-slate-300 leading-relaxed bg-surface-900/60 p-3.5 rounded-lg border border-slate-800/70">
+            ${escapeHtml(q.plain_language_query || q.original_query || '')}
+          </p>
+        </div>
+      `;
+
+      // 4. Legal Explanation
+      const explanationPoints = (ans.explanation || []).map(pt => `
+        <li class="flex items-start space-x-3 text-xs md:text-sm text-slate-200 leading-relaxed">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-400 mt-2 shrink-0"></span>
+          <span>${escapeHtml(pt)}</span>
+        </li>
+      `).join('');
+
+      const explanationHtml = `
+        <div class="rounded-xl bg-surface-850/80 border border-slate-800/90 p-4 space-y-3.5">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="scale" class="w-4 h-4 text-brand-400"></i>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">4. Legal Explanation</h3>
+          </div>
+          <div class="border-l-4 border-brand-500 bg-brand-500/10 p-3.5 rounded-r-xl">
+            <p class="text-xs md:text-sm font-medium text-slate-100 leading-relaxed">${escapeHtml(ans.summary || 'Summary unavailable.')}</p>
+          </div>
+          ${explanationPoints ? `
+            <ul class="space-y-2 pt-1 pl-1">
+              ${explanationPoints}
+            </ul>
+          ` : ''}
+        </div>
+      `;
+
+      // 5. Legal Sources & Citations
+      let citationsContent = '';
+      if (!citations.length) {
+        citationsContent = `
+          <div class="p-4 text-center text-xs text-slate-400 bg-surface-900/60 rounded-xl border border-slate-800/70">
+            No specific statutory citations were verified in the retrieved documents for this question.
+          </div>
+        `;
+      } else {
+        citationsContent = `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            ${citations.map(c => {
+              const pdfUrl = getPdfUrl(c.file_name, c.page_number);
+              const metaInfo = PDF_SOURCE_MAP[c.file_name];
+              const docDisplay = metaInfo ? metaInfo.title : c.file_name;
+              const linkHtml = pdfUrl ? `
+                <a href="${pdfUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 px-2.5 py-1 text-xs font-semibold text-brand-300 hover:text-white bg-brand-600/30 hover:bg-brand-600/50 border border-brand-500/40 rounded-lg transition" title="Open official PDF at Page ${c.page_number}">
+                  <span>Official PDF (Pg ${c.page_number})</span>
+                  <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
+              ` : `<span class="text-xs text-slate-400 font-medium">Page ${c.page_number}</span>`;
+
+              return `
+                <div class="p-3.5 rounded-xl bg-surface-900/90 border border-slate-800 hover:border-slate-700 transition flex flex-col justify-between space-y-3">
+                  <div>
+                    <div class="flex items-center justify-between flex-wrap gap-1.5 mb-1.5">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-brand-500/20 text-brand-300 border border-brand-500/30">
+                        ${escapeHtml(c.citation_id)}
+                      </span>
+                      <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+                        ${escapeHtml(c.section)}
+                      </span>
+                    </div>
+                    <p class="text-xs font-semibold text-slate-200 line-clamp-1" title="${escapeHtml(c.title)}">${escapeHtml(c.title)}</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1" title="${escapeHtml(c.act)}">${escapeHtml(c.act)}</p>
+
+                    <blockquote class="mt-2.5 p-2.5 rounded-lg bg-surface-950/70 border-l-2 border-brand-500 text-xs italic text-slate-300 font-serif leading-relaxed">
+                      "${escapeHtml(c.supporting_text)}"
+                    </blockquote>
+                  </div>
+
+                  <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-[11px] text-slate-400 truncate max-w-[150px]" title="${escapeHtml(docDisplay)}">${escapeHtml(docDisplay)}</span>
+                    ${linkHtml}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      const citationsHtml = `
+        <div class="rounded-xl bg-surface-850/80 border border-slate-800/90 p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="bookmark-check" class="w-4 h-4 text-brand-400"></i>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">5. Legal Sources &amp; Citations</h3>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-surface-900 border border-slate-700 text-slate-300">
+              ${citations.length} verified
+            </span>
+          </div>
+          ${citationsContent}
+        </div>
+      `;
+
+      // 6. Retrieved Documents (Collapsible)
+      const chunkListHtml = (retrieval.chunks || []).map(ch => {
+        const pdfUrl = getPdfUrl(ch.file_name, ch.page_number);
+        const metaInfo = PDF_SOURCE_MAP[ch.file_name];
+        const docTitle = metaInfo ? metaInfo.title : ch.file_name;
+        const simDisplay = ch.similarity_score !== null && ch.similarity_score !== undefined
+          ? `${(ch.similarity_score * 100).toFixed(1)}%`
+          : 'N/A';
+
+        return `
+          <div class="p-3.5 rounded-xl bg-surface-900/90 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                  #${ch.retrieval_rank}
+                </span>
+                <span class="text-xs font-semibold text-slate-200" title="${escapeHtml(docTitle)}">${escapeHtml(docTitle)}</span>
+                <span class="text-[10px] text-slate-400 bg-surface-850 px-1.5 py-0.5 rounded border border-slate-800">Pg ${ch.page_number}</span>
+              </div>
+              <div class="flex items-center space-x-2 text-[10px]">
+                <span class="text-slate-400">Cosine Sim: <strong class="text-emerald-400">${simDisplay}</strong></span>
+                <span class="text-slate-500">•</span>
+                <span class="text-slate-400">Raw Dist: <strong class="text-slate-300">${ch.raw_distance}</strong></span>
+                ${pdfUrl ? `
+                  <a href="${pdfUrl}" target="_blank" rel="noopener noreferrer" class="ml-1 text-brand-400 hover:text-brand-300 underline inline-flex items-center gap-0.5">
+                    PDF ↗
+                  </a>
+                ` : ''}
+              </div>
+            </div>
+            <div class="bg-surface-950/80 p-3 rounded-lg border border-slate-800/80 text-xs text-slate-300 font-mono leading-relaxed whitespace-pre-wrap max-h-48 overflow-y-auto">
+${escapeHtml(ch.content)}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const retrievedDocsHtml = `
+        <details class="group rounded-xl bg-surface-850/80 border border-slate-800/90 overflow-hidden transition">
+          <summary class="p-4 flex items-center justify-between cursor-pointer select-none bg-surface-850 hover:bg-surface-800 transition">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="files" class="w-4 h-4 text-brand-400"></i>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-300">6. Retrieved Documents</h3>
+              <span class="text-[11px] text-slate-400 bg-surface-900 px-2 py-0.5 rounded-full border border-slate-700">
+                ${retrieval.total_chunks_retrieved} chunks
+              </span>
+            </div>
+            <div class="flex items-center space-x-2 text-xs text-slate-400">
+              <span class="text-[11px]">Click to inspect raw chunks</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
+            </div>
+          </summary>
+          <div class="p-4 pt-2 border-t border-slate-800 space-y-3">
+            ${chunkListHtml || '<p class="text-xs text-slate-400 text-center py-2">No chunks retrieved.</p>'}
+          </div>
+        </details>
+      `;
+
+      // 7. What to Do Next
+      const actionStepsHtml = (nextSteps.actions || []).map(act => {
+        const sourceTags = (act.source_pages || []).map(pg => `
+          <span class="px-1.5 py-0.5 rounded text-[10px] bg-brand-500/20 text-brand-300 border border-brand-500/30">
+            Page ${pg}
+          </span>
+        `).join('');
+
+        return `
+          <div class="p-3.5 rounded-xl bg-surface-900/90 border border-slate-800 flex items-start space-x-3.5">
+            <div class="w-7 h-7 rounded-lg bg-brand-600/20 text-brand-400 border border-brand-500/30 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+              ${act.step}
+            </div>
+            <div class="flex-1 space-y-1">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <h4 class="text-xs md:text-sm font-semibold text-slate-100">${escapeHtml(act.title)}</h4>
+                <div class="flex items-center space-x-1.5">
+                  <span class="text-[10px] font-mono text-slate-400 bg-surface-850 px-1.5 py-0.5 rounded border border-slate-800">${escapeHtml(act.source_type)}</span>
+                  ${sourceTags}
+                </div>
+              </div>
+              <p class="text-xs md:text-sm text-slate-300 leading-relaxed">${escapeHtml(act.description)}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const nextStepsHtml = `
+        <div class="rounded-xl bg-surface-850/80 border border-slate-800/90 p-4 space-y-3">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">7. What to Do Next</h3>
+          </div>
+          <div class="space-y-2.5">
+            ${actionStepsHtml || '<p class="text-xs text-slate-400 text-center py-2">No specific procedural steps indicated.</p>'}
+          </div>
+        </div>
+      `;
+
+      // 8. Warnings & Limitations
+      const warningsItemsHtml = warnings.map(w => `
+        <div class="p-3 rounded-xl bg-amber-950/20 border border-amber-600/40 flex items-start space-x-2.5 text-xs text-amber-200">
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+          <div>
+            <span class="font-bold uppercase tracking-wider text-[10px] text-amber-400 mr-1.5">${escapeHtml(w.type)}:</span>
+            <span>${escapeHtml(w.message)}</span>
+          </div>
+        </div>
+      `).join('');
+
+      const limitationsItemsHtml = limitations.map(lim => `
+        <li class="flex items-start space-x-2 text-xs text-slate-300">
+          <span class="w-1.5 h-1.5 rounded-full bg-slate-500 mt-1.5 shrink-0"></span>
+          <span>${escapeHtml(lim)}</span>
+        </li>
+      `).join('');
+
+      const warningsAndLimitationsHtml = `
+        <div class="rounded-xl bg-surface-850/80 border border-slate-800/90 p-4 space-y-3.5">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">8. Warnings &amp; Limitations</h3>
+          </div>
+          ${warningsItemsHtml ? `
+            <div class="space-y-2">
+              ${warningsItemsHtml}
+            </div>
+          ` : ''}
+          ${limitationsItemsHtml ? `
+            <div class="p-3 rounded-xl bg-surface-900/90 border border-slate-800 space-y-2">
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Document Limitations &amp; Scope</p>
+              <ul class="space-y-1.5">
+                ${limitationsItemsHtml}
+              </ul>
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      // 9. Technical Metadata (Collapsible)
+      const metadataHtml = `
+        <details class="group rounded-xl bg-surface-850/80 border border-slate-800/90 overflow-hidden transition">
+          <summary class="p-4 flex items-center justify-between cursor-pointer select-none bg-surface-850 hover:bg-surface-800 transition">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="cpu" class="w-4 h-4 text-cyan-400"></i>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-300">9. Technical Metadata</h3>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${statusColor}">
+                ${escapeHtml(meta.status || 'ANSWERED')}
+              </span>
+            </div>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180"></i>
+          </summary>
+          <div class="p-4 pt-3 border-t border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div class="bg-surface-900/80 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Status</span>
+              <span class="font-bold text-slate-200">${escapeHtml(meta.status || 'ANSWERED')}</span>
+            </div>
+            <div class="bg-surface-900/80 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Model</span>
+              <span class="font-semibold text-slate-200 truncate block" title="${escapeHtml(meta.model || '')}">${escapeHtml(meta.model || '')}</span>
+            </div>
+            <div class="bg-surface-900/80 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Retrieval Method</span>
+              <span class="font-semibold text-slate-200 truncate block" title="${escapeHtml(meta.retrieval_method || '')}">${escapeHtml(meta.retrieval_method || '')}</span>
+            </div>
+            <div class="bg-surface-900/80 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Top-K / Total</span>
+              <span class="font-bold text-slate-200">${meta.top_k || 5} req / ${retrieval.total_chunks_retrieved} ret</span>
+            </div>
+          </div>
+        </details>
+      `;
+
+      // Assemble all 9 sections inside the assistant message bubble
+      container.innerHTML = `
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 p-[1px] shadow shrink-0 mt-1">
+          <div class="w-full h-full bg-surface-900 rounded-[11px] flex items-center justify-center">
+            <i data-lucide="scale" class="w-4 h-4 text-indigo-400"></i>
+          </div>
+        </div>
+        <div class="flex-1 bg-surface-900/95 border border-slate-800 rounded-2xl rounded-tl-sm p-5 md:p-6 shadow-2xl space-y-4">
+          ${problemHtml}
+          ${refinedQueryHtml}
+          ${plainQueryHtml}
+          ${explanationHtml}
+          ${citationsHtml}
+          ${retrievedDocsHtml}
+          ${nextStepsHtml}
+          ${warningsAndLimitationsHtml}
+          ${metadataHtml}
         </div>
       `;
 
@@ -776,12 +1004,12 @@
     // Render Assistant Error
     function renderAssistantError(container, errorMsg) {
       container.innerHTML = `
-        <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+        <div class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 mt-1 border border-rose-500/30">
           <i data-lucide="alert-triangle" class="w-4 h-4"></i>
         </div>
-        <div class="flex-1 bg-surface-900 border border-rose-900/50 rounded-2xl rounded-tl-sm p-4 text-xs text-rose-300">
-          <p class="font-bold text-rose-400 mb-1">Failed to generate response</p>
-          <p>${escapeHtml(errorMsg)}</p>
+        <div class="flex-1 bg-surface-900 border border-rose-900/50 rounded-2xl rounded-tl-sm p-5 text-xs text-rose-300 space-y-1 shadow-lg">
+          <p class="font-bold text-rose-400 text-sm">Failed to generate structured response</p>
+          <p class="leading-relaxed">${escapeHtml(errorMsg)}</p>
         </div>
       `;
       lucide.createIcons();
@@ -793,8 +1021,9 @@
     }
 
     function escapeHtml(text) {
+      if (!text) return '';
       const div = document.createElement('div');
-      div.innerText = text;
+      div.innerText = String(text);
       return div.innerHTML;
     }
 
@@ -803,4 +1032,3 @@
   </script>
 </body>
 </html>
-

@@ -1,4 +1,5 @@
-from app.schemas.chat_schema import ChatRequest, SourceResponse, ChatResponse
+from app.schemas.chat_schema import ChatRequest, ChatResponse, StructuredRAGResponse
 
-__all__ = ["ChatRequest", "SourceResponse", "ChatResponse"]
+__all__ = ["ChatRequest", "ChatResponse", "StructuredRAGResponse"]
+
 
